@@ -180,11 +180,16 @@ class HBNBCommand(cmd.Cmd):
             if len(my_list) < 4:
                 raise ValueError()
             v = objects[key]
+<<<<<<< HEAD
             try:
                 v.__dict__[my_list[2]] = eval(my_list[3])
             except Exception:
                 v.__dict__[my_list[2]] = my_list[3]
                 v.save()
+=======
+            v.__dict__[my_list[2]] = my_list[3]
+            v.save()
+>>>>>>> 943b252f5d180925631cb822e7b5268c5c0f6f84
         except SyntaxError:
             print("** class name missing **")
         except NameError:
