@@ -43,22 +43,25 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError()
             my_list = line.split(" ")
             obj = eval("{}()".format(my_list[0]))
-            new_dict = {}
-            for arg in my_list:
+            for arg in my_list[1:]:
                 if "=" in arg:
                     pair = arg.split("=")
                     key = pair[0]
                     value = pair[1]
-                    if value[0] == value[:-1] == '"':
-                        value.replace("_", " ")
-                        new_dict[key] = shlex.split(value)
-                        print(new_dict[key])
-                    elif type(value) is float:
-                        new_dict[key] = value
-                    elif type(value) is int:
-                        new_dict[key] = value
-            for key, value in new_dict.items():
-                do_update(self.__class__.__name__, self.id, key, value)
+                    if value[0] == value[-1] == '"':
+                        value = value.replace("_", " ")
+                    else:
+                        try:
+                            value = int(value)
+                        except:
+                            try:
+                                value = float(value)
+                            except:
+                                continue
+                obj.__dict__[key] = value
+            """
+            obj = eval(my_list[0])(**new_dict)
+            """
             obj.save()
             print("{}".format(obj.id))
         except SyntaxError:
@@ -180,16 +183,11 @@ class HBNBCommand(cmd.Cmd):
             if len(my_list) < 4:
                 raise ValueError()
             v = objects[key]
-<<<<<<< HEAD
             try:
                 v.__dict__[my_list[2]] = eval(my_list[3])
             except Exception:
                 v.__dict__[my_list[2]] = my_list[3]
                 v.save()
-=======
-            v.__dict__[my_list[2]] = my_list[3]
-            v.save()
->>>>>>> 943b252f5d180925631cb822e7b5268c5c0f6f84
         except SyntaxError:
             print("** class name missing **")
         except NameError:
