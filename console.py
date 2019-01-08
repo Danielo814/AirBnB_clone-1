@@ -50,6 +50,8 @@ class HBNBCommand(cmd.Cmd):
                     value = pair[1]
                     if value[0] == value[-1] == '"':
                         value = value.replace("_", " ")
+                        value = value.split('"')[1]
+                        value = value.split('"')[0]
                     else:
                         try:
                             value = int(value)
