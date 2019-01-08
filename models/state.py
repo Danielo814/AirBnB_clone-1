@@ -12,4 +12,16 @@ class State(BaseModel, Base):
     """
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    cities = relationship("City")
+    cities = relationship("City", backref="state")
+
+    """File Storage"""
+    @property
+    def cities(self):
+        """
+        city properties
+        """
+        cls = []
+        for val in storage.all("City").values():
+            if val.state_id == self.id:
+                cls.append(val)
+        return cls
