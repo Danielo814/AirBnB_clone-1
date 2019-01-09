@@ -20,6 +20,7 @@ class Place(BaseModel, Base):
         longitude: longitude in float
         amenity_ids: list of Amenity ids
     """
+
     __tablename__ = 'places'
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('user.id'), nullable=False)
@@ -56,7 +57,11 @@ class Place(BaseModel, Base):
                                  nullable=False,
                                  ForeignKey('amenities.id'),
                                  primary_key=True))
+                                 ForeignKey('places.id'), nullable=False),
+                          Column('amenity_id', String(60),
+                                 ForeignKey('amenities.id'), nullable=False))
 
+                        
     amenities = relationship('Amenity', secondary=place_amenity,
                              viewonly=False)
 
@@ -67,7 +72,7 @@ class Place(BaseModel, Base):
         """
         cls = []
         for val in models.storage.all('Amenity').values():
-            if amenity_ids = self.id:
+            if amenity_ids == self.id:
                 cls.append(val)
         return cls
 
@@ -77,5 +82,5 @@ class Place(BaseModel, Base):
         Sets amenity to place
         """
         if isinstance(obj, Amenity):
-            if self.id = obj.place_id:
+            if self.id == obj.place_id:
                 self.amenity_ids.append(obj.id)
