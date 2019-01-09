@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import os
 
+
 class State(BaseModel, Base):
     """This is the class for State
     Attributes:
@@ -13,8 +14,9 @@ class State(BaseModel, Base):
     """
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
-    cities = relationship("City", cascade="all, delete-orphan", backref="state")
-  
+    cities = relationship("City", cascade="all, delete-orphan",
+                          backref="state")
+
     """File Storage"""
     @property
     def cities(self):
@@ -22,7 +24,7 @@ class State(BaseModel, Base):
         city properties
         """
         cls = []
-        for val in storage.all(City).values():
+        for val in storage.all('City').values():
             if val.state_id == self.id:
                 cls.append(val)
             return cls
