@@ -22,7 +22,7 @@ class State(BaseModel, Base):
         city properties
         """
         cls = []
-        for val in storage.all(City).values():
+        for val in storage.all('City').values():
             if val.state_id == self.id:
                 cls.append(val)
             return cls
