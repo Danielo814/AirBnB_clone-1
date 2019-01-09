@@ -11,21 +11,18 @@ class State(BaseModel, Base):
     Attributes:
         name: input name
     """
-    if os.getenv("HBNB_TYPE_STORAGE") == "db":
-        __tablename__ = "states"
-        name = Column(String(128), nullable=False)
-        cities = relationship("City", cascade="all, delete-orphan", backref="state")
-
-    else:
-
-        """File Storage"""
-        @property
-        def cities(self):
-            """
-            city properties
-            """
-            cls = []
-            for val in storage.all(City).values():
-                if val.state_id == self.id:
-                    cls.append(val)
+    __tablename__ = "states"
+    name = Column(String(128), nullable=False)
+    cities = relationship("City", cascade="all, delete-orphan", backref="state")
+  
+    """File Storage"""
+    @property
+    def cities(self):
+        """
+        city properties
+        """
+        cls = []
+        for val in storage.all(City).values():
+            if val.state_id == self.id:
+                cls.append(val)
             return cls
