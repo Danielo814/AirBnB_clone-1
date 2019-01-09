@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This is the place class"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Integer, Float
+from sqlalchemy import Table, Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship, backref
 
 
@@ -50,8 +50,10 @@ class Place(BaseModel, Base):
         return cls
 
     place_amenity = Table('place_amenity', Base.metadata,
-                          Column('place_id', String(60), nullable=False),
-                          Column('amenity_id', String(60), nullable=False))
+                          Column('place_id', String(60),
+                                 ForeignKey('places.id'), nullable=False),
+                          Column('amenity_id', String(60),
+                                 ForeignKey('amenities.id'), nullable=False))
     amenities = relationship('Amenity', secondary=place_amenity,
                              viewonly=False)
 
@@ -62,7 +64,7 @@ class Place(BaseModel, Base):
         """
         cls = []
         for val in models.storage.all('Amenity').values():
-            if amenity_ids = self.id:
+            if amenity_ids == self.id:
                 cls.append(val)
         return cls
 
@@ -72,5 +74,5 @@ class Place(BaseModel, Base):
         Sets amenity to place
         """
         if isinstance(obj, Amenity):
-            if self.id = obj.place_id:
+            if self.id == obj.place_id:
                 self.amenity_ids.append(obj.id)
