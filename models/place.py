@@ -1,9 +1,17 @@
 #!/usr/bin/python3
 """This is the place class"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Integer, Float
+from sqlalchemy import Table, Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship, backref
 
+
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False))
 
 class Place(BaseModel, Base):
     """This is the class for Place
@@ -34,8 +42,8 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=False)
     amenity_ids = []
 
-    user = relationship("User", backref="place")
-    cities = relationship("City", backref="place")
+#    user = relationship("User", backref="place")
+#    cities = relationship("City", backref="place")
     reviews = relationship("Review", backref="place")
 
     @property
@@ -49,21 +57,8 @@ class Place(BaseModel, Base):
                 cls.append(val)
         return cls
 
-    place_amenity = Table('place_amenity', Base.metadata,
-                          Column('place_id', String(60),
-                                 nullable=False, ForeignKey('places.id'),
-                                 primary_key=True)
-                          Column('amenity_id', String(60),
-                                 nullable=False,
-                                 ForeignKey('amenities.id'),
-                                 primary_key=True))
-                                 ForeignKey('places.id'), nullable=False),
-                          Column('amenity_id', String(60),
-                                 ForeignKey('amenities.id'), nullable=False))
-
-                        
     amenities = relationship('Amenity', secondary=place_amenity,
-                             viewonly=False)
+                             backref='place_amenities', viewonly=False)
 
     @property
     def amenities(self):
