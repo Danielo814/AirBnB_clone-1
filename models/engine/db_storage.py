@@ -10,11 +10,16 @@ from models.city import City
 from models.state import State
 from models.amenity import Amenity
 from models.place import Place
+from models.user import User
+from models.review import Review
 
 database = os.getenv("HBNB_MYSQL_DB")
 host = os.getenv("HBNB_MYSQL_HOST")
 password = os.getenv("HBNB_MYSQL_PWD")
 user = os.getenv("HBNB_MYSQL_USER")
+
+instances = {"State": State, "City": City, "Amenity": Amenity,
+             "User": User, "Review": Review, "Place": Place}
 
 
 class DBStorage():
@@ -26,7 +31,7 @@ class DBStorage():
 
     def __init__(self):
         """
-        
+        creates engine
         """
         self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}"
                                       .format(user, password, host, database),
@@ -36,21 +41,20 @@ class DBStorage():
 
     def all(self, cls=None):
         """
-
+        prints all objects in database
         """
-        instances = {"State": State, "City": City}
         new_dict = {}
         if cls:
-            for obj in self.__session.query(instances[cls]):
-                print(obj)
-                key = str(obj.__class__.__name__) + str(obj.id)
+            for obj in self.__session.query(instances[cls]).all():
+                print(obj.__class__.__name__)
+                key = str(obj.__class__.__name__) + "." + str(obj.id)
                 value = obj
                 new_dict[key] = value
             return new_dict
         else:
             for inst in instances.values():
-                for obj in self.__session.query(inst):
-                    key = str(obj.__class__.__name__) + str(obj.id)
+                for obj in self.__session.query(inst).all():
+                    key = str(inst.__name__) + "." + str(obj.id)
                     value = obj
                     new_dict[key] = value
             return new_dict
