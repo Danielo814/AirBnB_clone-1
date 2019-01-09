@@ -2,9 +2,10 @@
 """This is the place class"""
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
-class Place(BaseModel, Base ):
+
+class Place(BaseModel, Base):
     """This is the class for Place
     Attributes:
         city_id: city id
@@ -19,6 +20,7 @@ class Place(BaseModel, Base ):
         longitude: longitude in float
         amenity_ids: list of Amenity ids
     """
+
     __tablename__ = 'places'
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('user.id'), nullable=False)
@@ -47,13 +49,11 @@ class Place(BaseModel, Base ):
                 cls.append(val)
         return cls
 
-
     place_amenity = Table('place_amenity', Base.metadata,
-                          Column('place_id', String(60), nullable=False)
+                          Column('place_id', String(60), nullable=False),
                           Column('amenity_id', String(60), nullable=False))
-
-
-    amenities = relationship('Amenity', secondary=place_amenity, viewonly=False)
+    amenities = relationship('Amenity', secondary=place_amenity,
+                             viewonly=False)
 
     @property
     def amenities(self):

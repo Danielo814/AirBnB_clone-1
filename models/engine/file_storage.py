@@ -41,6 +41,7 @@ class FileStorage:
         if obj:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             del self.__objects[key]
+
     def new(self, obj):
         """sets __object to given obj
         Args:
