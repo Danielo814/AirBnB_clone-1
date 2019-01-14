@@ -1,7 +1,11 @@
 #!/usr/bin/python3
+"""
+uses fabric to pack web_static into file
+"""
 from fabric.operations import local
 import os
 from datetime import datetime
+
 
 def do_pack():
     try:
