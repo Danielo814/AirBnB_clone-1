@@ -43,16 +43,16 @@ class DBStorage():
         """
         prints all objects in database
         """
+        instlist = [State, City, User]
         new_dict = {}
         if cls:
             for obj in self.__session.query(instances[cls]).all():
-                print(obj.__class__.__name__)
                 key = str(obj.__class__.__name__) + "." + str(obj.id)
                 value = obj
                 new_dict[key] = value
             return new_dict
         else:
-            for inst in instances.values():
+            for inst in instlist:
                 for obj in self.__session.query(inst).all():
                     key = str(inst.__name__) + "." + str(obj.id)
                     value = obj
@@ -85,4 +85,10 @@ class DBStorage():
         Base.metadata.create_all(bind=self.__engine)
         Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Scoped = scoped_session(Session)
-        self.__session = Scoped()
+        self.__session = Scoped
+
+    def close(self):
+        """
+        remove method on private session attribute
+        """
+        self.__session.remove()
